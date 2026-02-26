@@ -1,0 +1,21 @@
+{
+  "name": "whatsapp-concesionario-bot",
+  "version": "1.0.0",
+  "description": "Chatbot de WhatsApp para concesionario de autos nuevos con panel de administración",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "seed": "node src/seed.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "better-sqlite3": "^11.1.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ejs": "^3.1.10"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

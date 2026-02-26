@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Panel Admin' %> - Concesionario Bot</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h2>🚗 ConcesionarioBot</h2>
+      <span class="badge">Admin</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/admin" class="<%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>">📊 Dashboard</a></li>
+      <li><a href="/admin/leads" class="<%= typeof page !== 'undefined' && page === 'leads' ? 'active' : '' %>">👥 Leads</a></li>
+      <li><a href="/admin/conversations" class="<%= typeof page !== 'undefined' && page === 'conversations' ? 'active' : '' %>">💬 Conversaciones</a></li>
+      <li><a href="/admin/appointments" class="<%= typeof page !== 'undefined' && page === 'appointments' ? 'active' : '' %>">📅 Citas</a></li>
+      <li><a href="/admin/quotes" class="<%= typeof page !== 'undefined' && page === 'quotes' ? 'active' : '' %>">💰 Cotizaciones</a></li>
+      <li><a href="/admin/vehicles" class="<%= typeof page !== 'undefined' && page === 'vehicles' ? 'active' : '' %>">🚗 Vehículos</a></li>
+    </ul>
+  </nav>
+  <main class="content">
+    <%- body %>
+  </main>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

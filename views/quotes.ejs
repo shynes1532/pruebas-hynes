@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cotizaciones - Concesionario Bot</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('partials/sidebar', { page: 'quotes' }) %>
+  <main class="content">
+    <div class="page-header">
+      <h1>Cotizaciones</h1>
+      <p>Cotizaciones generadas por el bot</p>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Telefono</th>
+            <th>Vehiculo</th>
+            <th>Precio</th>
+            <th>Anticipo</th>
+            <th>Cuotas</th>
+            <th>Cuota mensual</th>
+            <th>Tasa</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% quotes.forEach(function(q) { %>
+          <tr>
+            <td>#<%= q.id %></td>
+            <td><%= q.name || '-' %></td>
+            <td><%= q.phone %></td>
+            <td><%= q.vehicle_info || '-' %></td>
+            <td>USD <%= q.vehicle_price ? q.vehicle_price.toLocaleString('es-AR') : '-' %></td>
+            <td>USD <%= q.down_payment ? q.down_payment.toLocaleString('es-AR') : '-' %></td>
+            <td><%= q.financing_months || '-' %></td>
+            <td><strong>USD <%= q.monthly_payment ? q.monthly_payment.toLocaleString('es-AR') : '-' %></strong></td>
+            <td><%= q.interest_rate ? (q.interest_rate * 100).toFixed(0) + '%' : '-' %></td>
+            <td><span class="badge badge-<%= q.status %>"><%= q.status %></span></td>
+            <td><%= new Date(q.created_at).toLocaleDateString('es-AR') %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% if (quotes.length === 0) { %>
+        <p class="empty-state">No hay cotizaciones todavia.</p>
+      <% } %>
+    </div>
+  </main>
+</body>
+</html>

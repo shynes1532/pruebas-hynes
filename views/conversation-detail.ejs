@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat <%= phone %> - Concesionario Bot</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('partials/sidebar', { page: 'conversations' }) %>
+  <main class="content">
+    <div class="page-header">
+      <h1>Conversacion: <%= phone %></h1>
+      <% if (lead) { %>
+        <p>Cliente: <strong><%= lead.name || 'Sin nombre' %></strong> | Interes: <strong><%= lead.vehicle_interest || 'No especificado' %></strong></p>
+      <% } %>
+      <a href="/admin/conversations" class="btn-small">&larr; Volver</a>
+    </div>
+
+    <div class="chat-container">
+      <% messages.forEach(function(m) { %>
+      <div class="chat-message <%= m.direction === 'incoming' ? 'msg-incoming' : 'msg-outgoing' %>">
+        <div class="msg-bubble">
+          <div class="msg-text"><%= m.message %></div>
+          <div class="msg-meta">
+            <span class="msg-time"><%= new Date(m.created_at).toLocaleString('es-AR') %></span>
+            <span class="msg-type"><%= m.message_type %></span>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+      <% if (messages.length === 0) { %>
+        <p class="empty-state">No hay mensajes en esta conversacion.</p>
+      <% } %>
+    </div>
+  </main>
+</body>
+</html>
