@@ -33,10 +33,13 @@ app.get('/', (req, res) => {
 });
 
 // Initialize database and start server
-db.initialize();
-
-app.listen(PORT, () => {
-  console.log(`🚗 Bot del concesionario corriendo en puerto ${PORT}`);
-  console.log(`📊 Panel admin: http://localhost:${PORT}/admin`);
-  console.log(`🔗 Webhook URL: http://localhost:${PORT}/webhook`);
+db.initialize().then(() => {
+  app.listen(PORT, () => {
+    console.log(`🚗 Bot del concesionario corriendo en puerto ${PORT}`);
+    console.log(`📊 Panel admin: http://localhost:${PORT}/admin`);
+    console.log(`🔗 Webhook URL: http://localhost:${PORT}/webhook`);
+  });
+}).catch(err => {
+  console.error('Error al inicializar la base de datos:', err);
+  process.exit(1);
 });

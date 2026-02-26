@@ -1,7 +1,8 @@
 require('dotenv').config();
 const { getDb, initialize } = require('./models/database');
 
-initialize();
+async function main() {
+await initialize();
 const db = getDb();
 
 console.log('Cargando catalogo FIAT - Liendo Automotores...\n');
@@ -277,3 +278,9 @@ summary.forEach(s => {
 
 console.log('\nDatos cargados exitosamente.');
 console.log('Ejecuta "npm start" para iniciar el bot.');
+}
+
+main().catch(err => {
+  console.error('Error:', err);
+  process.exit(1);
+});
