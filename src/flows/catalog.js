@@ -30,65 +30,84 @@ function getAllVehicles() {
 }
 
 const CATEGORY_LABELS = {
-  sedan: '🚗 Sedán',
-  suv: '🚙 SUV / Camioneta',
+  sedan: '🚗 Sedan',
+  suv: '🚙 SUV',
   hatchback: '🏎️ Hatchback',
   pickup: '🛻 Pickup',
-  coupe: '🏎️ Coupé',
-  van: '🚐 Van / Utilitario'
+  coupe: '🏎️ Coupe',
+  van: '🚐 Utilitario'
 };
 
-async function showCategories(phone) {
-  const categories = getCategories();
+// Obtener modelos agrupados (para cuando hay muchos vehiculos)
+function getModelGroups() {
+  const db = getDb();
+  return db.prepare(`
+    SELECT model, category, COUNT(*) as versions, MIN(price) as min_price, MAX(price) as max_price
+    FROM vehicles WHERE available = 1
+    GROUP BY model ORDER BY min_price
+  `).all();
+}
 
-  if (categories.length === 0) {
-    await wa.sendText(phone, 'Por el momento no tenemos vehículos cargados en el catálogo. Un asesor se comunicará con vos pronto.\n\nEscribí *menu* para volver.');
+// Obtener versiones de un modelo
+function getVehiclesByModel(model) {
+  const db = getDb();
+  return db.prepare(
+    'SELECT * FROM vehicles WHERE model = ? AND available = 1 ORDER BY price'
+  ).all(model);
+}
+
+async function showCategories(phone) {
+  const models = getModelGroups();
+
+  if (models.length === 0) {
+    await wa.sendText(phone, 'Por el momento no tenemos vehiculos cargados en el catalogo. Un asesor se comunicara con vos pronto.\n\nEscribi *menu* para volver.');
     return;
   }
 
-  const rows = categories.map(cat => ({
-    id: `cat_${cat}`,
-    title: CATEGORY_LABELS[cat] || cat,
-    description: `Ver modelos ${cat}`
-  }));
-
-  // Agregar opción de ver todos
-  rows.unshift({
-    id: 'cat_all',
-    title: '📋 Ver Todos',
-    description: 'Ver todos los modelos disponibles'
+  const rows = models.slice(0, 10).map(m => {
+    const priceLabel = `Desde $${(m.min_price / 1000000).toFixed(1)}M`;
+    const catLabel = CATEGORY_LABELS[m.category] || m.category;
+    return {
+      id: `model_${m.model}`,
+      title: `FIAT ${m.model}`,
+      description: `${catLabel} | ${m.versions} ver. | ${priceLabel}`
+    };
   });
 
   await wa.sendList(
     phone,
-    '¿Qué tipo de vehículo estás buscando?\n\nSeleccioná una categoría para ver los modelos disponibles:',
-    'Ver categorías',
-    [{ title: 'Categorías', rows }],
-    '🚗 Nuestro Catálogo'
+    'Estos son nuestros modelos FIAT 0km disponibles.\n\nSelecciona un modelo para ver versiones y precios:',
+    'Ver modelos',
+    [{ title: 'Modelos FIAT', rows }],
+    'Catalogo FIAT 0km'
   );
 }
 
-async function showVehicleList(phone, category) {
-  const vehicles = category === 'all' ? getAllVehicles() : getVehiclesByCategory(category);
+async function showModelVersions(phone, modelName) {
+  const vehicles = getVehiclesByModel(modelName);
 
   if (vehicles.length === 0) {
-    await wa.sendText(phone, 'No encontramos vehículos en esa categoría. Probá con otra.\n\nEscribí *menu* para volver.');
+    await wa.sendText(phone, 'No encontramos versiones de ese modelo. Escribi *menu* para volver.');
+    return;
+  }
+
+  if (vehicles.length === 1) {
+    // Si hay una sola version, mostrar directo el detalle
+    await showVehicleDetail(phone, vehicles[0].id);
     return;
   }
 
   const rows = vehicles.slice(0, 10).map(v => ({
     id: `vehicle_${v.id}`,
-    title: `${v.brand} ${v.model}`,
-    description: `${v.year} - ${v.version} | ${formatPrice(v.price, v.currency)}`
+    title: v.version.substring(0, 24),
+    description: `$${v.price.toLocaleString('es-AR')} | ${v.transmission}`
   }));
-
-  const label = category === 'all' ? 'Todos los modelos' : (CATEGORY_LABELS[category] || category);
 
   await wa.sendList(
     phone,
-    `Estos son nuestros modelos disponibles en *${label}*:\n\nSeleccioná uno para ver la ficha completa:`,
-    'Ver modelos',
-    [{ title: label, rows }]
+    `*FIAT ${modelName}* - Versiones disponibles:\n\nSelecciona una version para ver la ficha completa:`,
+    'Ver versiones',
+    [{ title: `FIAT ${modelName}`, rows }]
   );
 }
 
@@ -135,7 +154,7 @@ async function showVehicleDetail(phone, vehicleId, updateUserState, upsertLead) 
 }
 
 function formatPrice(price, currency) {
-  const cur = currency || 'USD';
+  const cur = currency || 'ARS';
   if (cur === 'USD') return `USD ${price.toLocaleString('es-AR')}`;
   return `$ ${price.toLocaleString('es-AR')}`;
 }
@@ -178,18 +197,18 @@ async function handle(context) {
 
   switch (step) {
     case 'show_categories':
-      // Selección de categoría
-      if (text.startsWith('cat_')) {
-        const category = text.replace('cat_', '');
-        updateUserState(phone, 'catalog', 'show_vehicles', { category });
-        await showVehicleList(phone, category);
+      // Seleccion de modelo
+      if (text.startsWith('model_')) {
+        const modelName = text.replace('model_', '');
+        updateUserState(phone, 'catalog', 'show_versions', { model: modelName });
+        await showModelVersions(phone, modelName);
       } else {
         await showCategories(phone);
       }
       break;
 
-    case 'show_vehicles':
-      // Selección de vehículo
+    case 'show_versions':
+      // Seleccion de version
       if (text.startsWith('vehicle_')) {
         const vehicleId = parseInt(text.replace('vehicle_', ''));
         updateUserState(phone, 'catalog', 'show_detail', { vehicle_id: vehicleId });
@@ -198,7 +217,7 @@ async function handle(context) {
         updateUserState(phone, 'catalog', 'show_categories', {});
         await showCategories(phone);
       } else {
-        await showVehicleList(phone, state.flow_data.category || 'all');
+        await showModelVersions(phone, state.flow_data.model);
       }
       break;
 
@@ -217,4 +236,4 @@ async function handle(context) {
   }
 }
 
-module.exports = { showCategories, showVehicleList, showVehicleDetail, handle, getVehicleById, getAllVehicles };
+module.exports = { showCategories, showModelVersions, showVehicleDetail, handle, getVehicleById, getAllVehicles, getVehiclesByModel, getModelGroups };

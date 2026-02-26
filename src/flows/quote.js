@@ -3,11 +3,11 @@ const { getDb } = require('../models/database');
 const { getAllVehicles, getVehicleById } = require('./catalog');
 
 const FINANCING_OPTIONS = [
-  { months: 12, rate: 0.15, id: 'fin_12' },
-  { months: 24, rate: 0.18, id: 'fin_24' },
-  { months: 36, rate: 0.22, id: 'fin_36' },
-  { months: 48, rate: 0.25, id: 'fin_48' },
-  { months: 60, rate: 0.28, id: 'fin_60' }
+  { months: 12, rate: 0.45, id: 'fin_12' },
+  { months: 24, rate: 0.55, id: 'fin_24' },
+  { months: 36, rate: 0.65, id: 'fin_36' },
+  { months: 48, rate: 0.70, id: 'fin_48' },
+  { months: 60, rate: 0.75, id: 'fin_60' }
 ];
 
 const DOWN_PAYMENT_OPTIONS = [
@@ -27,7 +27,7 @@ async function askVehicle(phone) {
   const rows = vehicles.slice(0, 10).map(v => ({
     id: `qv_${v.id}`,
     title: `${v.brand} ${v.model}`,
-    description: `${v.year} ${v.version} - USD ${v.price.toLocaleString('es-AR')}`
+    description: `${v.version} - $${(v.price/1000000).toFixed(1)}M`
   }));
 
   await wa.sendList(
@@ -97,15 +97,15 @@ async function showQuoteResult(phone, data) {
   let msg = `📄 *COTIZACIÓN*\n`;
   msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
   msg += `🚗 *${data.vehicle_info}*\n`;
-  msg += `💰 Precio de lista: ${formatPrice(data.vehicle_price, 'USD')}\n\n`;
+  msg += `💰 Precio de lista: ${formatPrice(data.vehicle_price, 'ARS')}\n\n`;
   msg += `📊 *Plan de financiamiento:*\n`;
-  msg += `  💵 Anticipo (${data.down_percent}%): ${formatPrice(calc.downPayment, 'USD')}\n`;
-  msg += `  📋 Monto a financiar: ${formatPrice(calc.financeAmount, 'USD')}\n`;
+  msg += `  💵 Anticipo (${data.down_percent}%): ${formatPrice(calc.downPayment, 'ARS')}\n`;
+  msg += `  📋 Monto a financiar: ${formatPrice(calc.financeAmount, 'ARS')}\n`;
   msg += `  📅 Plazo: ${data.months} cuotas\n`;
   msg += `  📈 Tasa anual: ${(data.rate * 100).toFixed(0)}%\n\n`;
-  msg += `💳 *Cuota mensual: ${formatPrice(calc.monthly, 'USD')}*\n`;
-  msg += `💰 Total financiado: ${formatPrice(calc.totalFinancing, 'USD')}\n`;
-  msg += `💰 Costo total: ${formatPrice(calc.totalCost, 'USD')}\n\n`;
+  msg += `💳 *Cuota mensual: ${formatPrice(calc.monthly, 'ARS')}*\n`;
+  msg += `💰 Total financiado: ${formatPrice(calc.totalFinancing, 'ARS')}\n`;
+  msg += `💰 Costo total: ${formatPrice(calc.totalCost, 'ARS')}\n\n`;
   msg += `━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `⚠️ _Valores estimados sujetos a aprobación crediticia._\n`;
   msg += `_Un asesor se contactará con vos para confirmar la cotización._`;

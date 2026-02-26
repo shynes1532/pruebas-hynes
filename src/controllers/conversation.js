@@ -1,5 +1,6 @@
 const { getDb } = require('../models/database');
 const wa = require('../services/whatsapp');
+const claude = require('../services/claude');
 const menuFlow = require('../flows/menu');
 const catalogFlow = require('../flows/catalog');
 const appointmentFlow = require('../flows/appointment');
@@ -55,7 +56,7 @@ function upsertLead(phone, name, vehicleInterest) {
   }
 }
 
-// Extraer texto del mensaje según tipo
+// Extraer texto del mensaje segun tipo
 function extractText(message) {
   switch (message.type) {
     case 'text':
@@ -73,9 +74,14 @@ function extractText(message) {
   }
 }
 
+// Verificar si el mensaje es texto libre (no un boton/lista interactiva)
+function isFreeText(message) {
+  return message.type === 'text';
+}
+
 // Handler principal
 async function handleIncoming(phone, message, profileName) {
-  // Marcar como leído
+  // Marcar como leido
   if (message.id) {
     wa.markAsRead(message.id);
   }
@@ -93,7 +99,7 @@ async function handleIncoming(phone, message, profileName) {
   logMessage(phone, 'incoming', text, message.type, `${state.current_flow}:${state.flow_step}`);
 
   // Comandos globales que siempre funcionan
-  if (['menu', 'menú', 'inicio', 'hola', 'hi', 'hello', 'buenas', 'buen dia', 'buenos dias'].includes(inputLower)) {
+  if (['menu', 'menú', 'inicio'].includes(inputLower)) {
     updateUserState(phone, 'main_menu', 'welcome', {});
     await menuFlow.showMainMenu(phone, profileName);
     return;
@@ -105,8 +111,43 @@ async function handleIncoming(phone, message, profileName) {
     return;
   }
 
-  // Router de flujos
+  // Si es texto libre y el usuario esta en el menu principal o bienvenida,
+  // intentar responder con Claude AI
+  const isText = isFreeText(message);
   const flow = state.current_flow;
+
+  if (isText && (flow === 'main_menu' || state.flow_step === 'welcome')) {
+    // Saludos -> mostrar menu
+    if (['hola', 'hi', 'hello', 'buenas', 'buen dia', 'buenos dias', 'que tal', 'buenas tardes', 'buenas noches'].includes(inputLower)) {
+      updateUserState(phone, 'main_menu', 'welcome', {});
+      await menuFlow.showMainMenu(phone, profileName);
+      return;
+    }
+
+    // Intentar responder con Claude
+    const aiResponse = await tryClaudeResponse(phone, text);
+    if (aiResponse) {
+      logMessage(phone, 'outgoing', aiResponse, 'text', 'claude_ai');
+      await wa.sendText(phone, aiResponse);
+      // Ofrecer menu despues de la respuesta de IA
+      await wa.sendButtons(
+        phone,
+        'Tambien podes usar nuestro menu interactivo:',
+        [
+          { id: 'menu_catalog', title: 'Ver Catalogo' },
+          { id: 'menu_quote', title: 'Cotizar' },
+          { id: 'menu_appointment', title: 'Agendar Cita' }
+        ]
+      );
+      return;
+    }
+
+    // Si no hay IA, mostrar menu
+    await menuFlow.showMainMenu(phone, profileName);
+    return;
+  }
+
+  // Router de flujos estructurados (botones, listas, pasos de flujo)
   const context = { phone, text, inputLower, state, profileName, updateUserState, logMessage, upsertLead };
 
   switch (flow) {
@@ -126,8 +167,29 @@ async function handleIncoming(phone, message, profileName) {
       await faqFlow.handle(context);
       break;
     default:
+      // Ultimo recurso: intentar IA o mostrar menu
+      if (isText) {
+        const aiResponse = await tryClaudeResponse(phone, text);
+        if (aiResponse) {
+          logMessage(phone, 'outgoing', aiResponse, 'text', 'claude_ai');
+          await wa.sendText(phone, aiResponse);
+          return;
+        }
+      }
       await menuFlow.showMainMenu(phone, profileName);
       break;
+  }
+}
+
+// Intentar obtener respuesta de Claude
+async function tryClaudeResponse(phone, userMessage) {
+  try {
+    const history = claude.getRecentHistory(phone, 10);
+    const response = await claude.getResponse(userMessage, history);
+    return response;
+  } catch (err) {
+    console.error('Error en Claude AI:', err.message);
+    return null;
   }
 }
 
