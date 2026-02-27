@@ -1,18 +1,16 @@
 const wa = require('../services/whatsapp');
 
 const DEALER = {
-  name: process.env.DEALER_NAME || 'Nuestro Concesionario',
-  phone: process.env.DEALER_PHONE || '',
-  address: process.env.DEALER_ADDRESS || '',
+  name: process.env.DEALER_NAME || 'LASAC - Liendo Automotores FIAT',
   hours: process.env.DEALER_HOURS || ''
 };
 
 async function showMainMenu(phone, profileName) {
-  const greeting = profileName ? `¡Hola ${profileName}! 👋` : '¡Hola! 👋';
+  const greeting = profileName ? `Hola ${profileName}!` : 'Hola!';
 
   await wa.sendButtons(
     phone,
-    `${greeting}\n\nBienvenido a *${DEALER.name}*.\n\n¿En qué podemos ayudarte hoy?`,
+    `${greeting}\n\nSoy Daniela, asesora virtual de *${DEALER.name}*.\n\nTe ayudo a elegir la mejor opcion: 0KM, financiacion o Plan de Ahorro. Tambien podes escribirme lo que necesites!`,
     [
       { id: 'menu_catalog', title: '🚗 Ver Catálogo' },
       { id: 'menu_appointment', title: '📅 Agendar Cita' },
@@ -36,11 +34,18 @@ async function showMoreOptions(phone) {
 
 async function showContactInfo(phone) {
   let msg = `📍 *${DEALER.name}*\n\n`;
-  if (DEALER.address) msg += `🏢 Dirección: ${DEALER.address}\n`;
-  if (DEALER.phone) msg += `📞 Teléfono: ${DEALER.phone}\n`;
+  msg += `🏢 *Rio Grande*\n`;
+  msg += `Av. San Martin 2599\n`;
+  msg += `Ventas: (296) 448-7924\n`;
+  msg += `Postventa: (296) 446-5050\n\n`;
+  msg += `🏢 *Ushuaia*\n`;
+  msg += `Ventas: Leopoldo Lugones 1950\n`;
+  msg += `Postventa: Piedrabuena 256\n`;
+  msg += `Ventas: (02964) 15-487924\n`;
+  msg += `Postventa: (02901) 15-559933\n\n`;
   if (DEALER.hours) msg += `🕐 Horarios: ${DEALER.hours}\n`;
   if (process.env.DEALER_WEBSITE) msg += `🌐 Web: ${process.env.DEALER_WEBSITE}\n`;
-  msg += '\nEscribí *menu* para volver al menú principal.';
+  msg += '\nEscribi *menu* para volver al menu principal.';
 
   await wa.sendText(phone, msg);
 }
