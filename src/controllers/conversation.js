@@ -81,13 +81,20 @@ function isFreeText(message) {
 
 // Handler principal
 async function handleIncoming(phone, message, profileName) {
+  console.log(`🔄 handleIncoming: phone=${phone}, type=${message.type}, profileName=${profileName}`);
+
   // Marcar como leido
   if (message.id) {
     wa.markAsRead(message.id);
   }
 
   const text = extractText(message);
-  if (!text) return;
+  if (!text) {
+    console.log('⚠️ No se pudo extraer texto del mensaje');
+    return;
+  }
+
+  console.log(`📝 Texto extraido: "${text}"`);
 
   const inputLower = text.toLowerCase().trim();
 
@@ -96,6 +103,7 @@ async function handleIncoming(phone, message, profileName) {
 
   // Guardar mensaje entrante
   const state = getUserState(phone);
+  console.log(`📊 Estado actual: flow=${state.current_flow}, step=${state.flow_step}`);
   logMessage(phone, 'incoming', text, message.type, `${state.current_flow}:${state.flow_step}`);
 
   // Comandos globales que siempre funcionan
@@ -134,14 +142,17 @@ async function handleIncoming(phone, message, profileName) {
   if (isText && (flow === 'main_menu' || state.flow_step === 'welcome')) {
     // Saludos -> mostrar menu
     if (['hola', 'hi', 'hello', 'buenas', 'buen dia', 'buenos dias', 'que tal', 'buenas tardes', 'buenas noches'].includes(inputLower)) {
+      console.log(`👋 Saludo detectado: "${inputLower}" -> mostrando menu`);
       updateUserState(phone, 'main_menu', 'welcome', {});
       await menuFlow.showMainMenu(phone, profileName);
       return;
     }
 
     // Intentar responder con Claude
+    console.log(`🤖 Intentando respuesta de Claude para: "${text}"`);
     const aiResponse = await tryClaudeResponse(phone, text);
     if (aiResponse) {
+      console.log(`✅ Claude respondio: "${aiResponse.substring(0, 100)}..."`)
       logMessage(phone, 'outgoing', aiResponse, 'text', 'claude_ai');
       await wa.sendText(phone, aiResponse);
       // Ofrecer menu despues de la respuesta de IA
@@ -206,11 +217,14 @@ async function handleIncoming(phone, message, profileName) {
 // Intentar obtener respuesta de Claude
 async function tryClaudeResponse(phone, userMessage) {
   try {
+    console.log(`🤖 tryClaudeResponse: obteniendo historial para ${phone}`);
     const history = claude.getRecentHistory(phone, 10);
+    console.log(`🤖 Historial: ${history.length} mensajes`);
     const response = await claude.getResponse(userMessage, history);
+    console.log(`🤖 Respuesta de Claude: ${response ? 'OK (' + response.length + ' chars)' : 'NULL'}`);
     return response;
   } catch (err) {
-    console.error('Error en Claude AI:', err.message);
+    console.error('❌ Error en Claude AI:', err.message);
     return null;
   }
 }
