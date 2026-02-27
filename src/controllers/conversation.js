@@ -132,14 +132,7 @@ async function handleIncoming(phone, message, profileName) {
   const flow = state.current_flow;
 
   if (isText && (flow === 'main_menu' || state.flow_step === 'welcome')) {
-    // Saludos -> mostrar menu
-    if (['hola', 'hi', 'hello', 'buenas', 'buen dia', 'buenos dias', 'que tal', 'buenas tardes', 'buenas noches'].includes(inputLower)) {
-      updateUserState(phone, 'main_menu', 'welcome', {});
-      await menuFlow.showMainMenu(phone, profileName);
-      return;
-    }
-
-    // Intentar responder con Claude
+    // Intentar responder con Claude (Daniela)
     const aiResponse = await tryClaudeResponse(phone, text);
     if (aiResponse) {
       logMessage(phone, 'outgoing', aiResponse, 'text', 'claude_ai');
@@ -157,7 +150,7 @@ async function handleIncoming(phone, message, profileName) {
       return;
     }
 
-    // Si no hay IA, mostrar menu
+    // Si no hay IA configurada, mostrar menu
     await menuFlow.showMainMenu(phone, profileName);
     return;
   }
