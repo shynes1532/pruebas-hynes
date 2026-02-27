@@ -103,9 +103,7 @@ async function showQuoteResult(phone, data) {
   msg += `  📋 Monto a financiar: ${formatPrice(calc.financeAmount, 'ARS')}\n`;
   msg += `  📅 Plazo: ${data.months} cuotas\n`;
   msg += `  📈 Tasa anual: ${(data.rate * 100).toFixed(0)}%\n\n`;
-  msg += `💳 *Cuota mensual: ${formatPrice(calc.monthly, 'ARS')}*\n`;
-  msg += `💰 Total financiado: ${formatPrice(calc.totalFinancing, 'ARS')}\n`;
-  msg += `💰 Costo total: ${formatPrice(calc.totalCost, 'ARS')}\n\n`;
+  msg += `💳 *Cuota mensual: ${formatPrice(calc.monthly, 'ARS')}*\n\n`;
   msg += `━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `⚠️ _Valores estimados sujetos a aprobación crediticia._\n`;
   msg += `_Un asesor se contactará con vos para confirmar la cotización._`;
