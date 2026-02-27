@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads - Concesionario Bot</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('partials/sidebar', { page: 'leads' }) %>
+  <main class="content">
+    <div class="page-header">
+      <h1>Leads / Contactos</h1>
+      <p>Todos los clientes que interactuaron con el bot</p>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Telefono</th>
+            <th>Nombre</th>
+            <th>Vehiculo de interes</th>
+            <th>Estado</th>
+            <th>Notas</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% leads.forEach(function(l) { %>
+          <tr>
+            <td>#<%= l.id %></td>
+            <td><a href="/admin/conversations/<%= l.phone %>"><%= l.phone %></a></td>
+            <td><%= l.name || '-' %></td>
+            <td><%= l.vehicle_interest || '-' %></td>
+            <td>
+              <select class="status-select" data-id="<%= l.id %>" data-type="leads" onchange="updateStatus(this)">
+                <option value="nuevo" <%= l.status === 'nuevo' ? 'selected' : '' %>>Nuevo</option>
+                <option value="contactado" <%= l.status === 'contactado' ? 'selected' : '' %>>Contactado</option>
+                <option value="en_negociacion" <%= l.status === 'en_negociacion' ? 'selected' : '' %>>En negociacion</option>
+                <option value="vendido" <%= l.status === 'vendido' ? 'selected' : '' %>>Vendido</option>
+                <option value="descartado" <%= l.status === 'descartado' ? 'selected' : '' %>>Descartado</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" class="note-input" value="<%= l.notes || '' %>" placeholder="Agregar nota..."
+                data-id="<%= l.id %>" onblur="saveNote(this)">
+            </td>
+            <td><%= new Date(l.created_at).toLocaleDateString('es-AR') %></td>
+            <td><a href="/admin/conversations/<%= l.phone %>" class="btn-small">Ver chat</a></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% if (leads.length === 0) { %>
+        <p class="empty-state">No hay leads todavia. Cuando los clientes escriban al bot, apareceran aca.</p>
+      <% } %>
+    </div>
+  </main>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

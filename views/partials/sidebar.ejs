@@ -1,0 +1,14 @@
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h2>ConcesionarioBot</h2>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="/admin" class="<%= page === 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
+    <li><a href="/admin/leads" class="<%= page === 'leads' ? 'active' : '' %>">Leads</a></li>
+    <li><a href="/admin/conversations" class="<%= page === 'conversations' ? 'active' : '' %>">Conversaciones</a></li>
+    <li><a href="/admin/appointments" class="<%= page === 'appointments' ? 'active' : '' %>">Citas</a></li>
+    <li><a href="/admin/quotes" class="<%= page === 'quotes' ? 'active' : '' %>">Cotizaciones</a></li>
+    <li><a href="/admin/vehicles" class="<%= page === 'vehicles' ? 'active' : '' %>">Vehiculos</a></li>
+  </ul>
+</nav>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversaciones - Concesionario Bot</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('partials/sidebar', { page: 'conversations' }) %>
+  <main class="content">
+    <div class="page-header">
+      <h1>Conversaciones</h1>
+      <p>Historial de chats con clientes</p>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Telefono</th>
+            <th>Mensajes</th>
+            <th>Ultimo mensaje</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% phones.forEach(function(p) { %>
+          <tr>
+            <td><%= p.phone %></td>
+            <td><span class="badge"><%= p.msg_count %></span></td>
+            <td><%= new Date(p.last_msg).toLocaleString('es-AR') %></td>
+            <td><a href="/admin/conversations/<%= p.phone %>" class="btn-small">Ver conversacion</a></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% if (phones.length === 0) { %>
+        <p class="empty-state">No hay conversaciones todavia.</p>
+      <% } %>
+    </div>
+  </main>
+</body>
+</html>

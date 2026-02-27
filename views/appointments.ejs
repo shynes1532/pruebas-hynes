@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citas - Concesionario Bot</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('partials/sidebar', { page: 'appointments' }) %>
+  <main class="content">
+    <div class="page-header">
+      <h1>Citas / Turnos</h1>
+      <p>Test drives, visitas y servicios agendados</p>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Telefono</th>
+            <th>Tipo</th>
+            <th>Vehiculo</th>
+            <th>Fecha</th>
+            <th>Horario</th>
+            <th>Estado</th>
+            <th>Creada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% appointments.forEach(function(a) { %>
+          <tr>
+            <td>#<%= a.id %></td>
+            <td><%= a.name %></td>
+            <td><%= a.phone %></td>
+            <td><%= a.appointment_type %></td>
+            <td><%= a.vehicle_info || '-' %></td>
+            <td><strong><%= a.date %></strong></td>
+            <td><%= a.time_slot %></td>
+            <td>
+              <select class="status-select" data-id="<%= a.id %>" data-type="appointments" onchange="updateStatus(this)">
+                <option value="pendiente" <%= a.status === 'pendiente' ? 'selected' : '' %>>Pendiente</option>
+                <option value="confirmada" <%= a.status === 'confirmada' ? 'selected' : '' %>>Confirmada</option>
+                <option value="completada" <%= a.status === 'completada' ? 'selected' : '' %>>Completada</option>
+                <option value="cancelada" <%= a.status === 'cancelada' ? 'selected' : '' %>>Cancelada</option>
+              </select>
+            </td>
+            <td><%= new Date(a.created_at).toLocaleDateString('es-AR') %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% if (appointments.length === 0) { %>
+        <p class="empty-state">No hay citas agendadas todavia.</p>
+      <% } %>
+    </div>
+  </main>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

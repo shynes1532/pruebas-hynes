@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehiculos - Concesionario Bot</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('partials/sidebar', { page: 'vehicles' }) %>
+  <main class="content">
+    <div class="page-header">
+      <h1>Vehiculos</h1>
+      <p>Catalogo de vehiculos cargados en el bot</p>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Anio</th>
+            <th>Version</th>
+            <th>Categoria</th>
+            <th>Precio</th>
+            <th>Combustible</th>
+            <th>Transmision</th>
+            <th>Disponible</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% vehicles.forEach(function(v) { %>
+          <tr>
+            <td>#<%= v.id %></td>
+            <td><%= v.brand %></td>
+            <td><%= v.model %></td>
+            <td><%= v.year %></td>
+            <td><%= v.version %></td>
+            <td><%= v.category %></td>
+            <td><strong>USD <%= v.price.toLocaleString('es-AR') %></strong></td>
+            <td><%= v.fuel %></td>
+            <td><%= v.transmission %></td>
+            <td><%= v.available ? 'Si' : 'No' %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% if (vehicles.length === 0) { %>
+        <p class="empty-state">No hay vehiculos cargados. Ejecuta <code>npm run seed</code> para cargar datos de ejemplo.</p>
+      <% } %>
+    </div>
+  </main>
+</body>
+</html>
