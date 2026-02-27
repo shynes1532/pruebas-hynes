@@ -111,6 +111,21 @@ async function handleIncoming(phone, message, profileName) {
     return;
   }
 
+  // Botón "Agendar visita" desde cotización u otros flujos
+  if (text.startsWith('appt_vehicle_')) {
+    const vehicleId = parseInt(text.replace('appt_vehicle_', ''));
+    const vehicle = catalogFlow.getVehicleById(vehicleId);
+    if (vehicle) {
+      updateUserState(phone, 'appointment', 'ask_name', {
+        type: 'test_drive',
+        vehicle_id: vehicleId,
+        vehicle_info: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
+      });
+      await appointmentFlow.askName(phone);
+      return;
+    }
+  }
+
   // Si es texto libre y el usuario esta en el menu principal o bienvenida,
   // intentar responder con Claude AI
   const isText = isFreeText(message);
