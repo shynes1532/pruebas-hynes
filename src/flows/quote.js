@@ -113,7 +113,11 @@ async function showQuoteResult(phone, data) {
   await wa.sendText(phone, msg);
 
   // Guardar cotización en DB
-  saveQuote(phone, data, calc);
+  try {
+    saveQuote(phone, data, calc);
+  } catch (err) {
+    console.error('❌ Error guardando cotización:', err);
+  }
 
   // Botones de acción post-cotización
   await wa.sendButtons(

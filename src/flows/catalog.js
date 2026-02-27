@@ -169,7 +169,9 @@ async function handle(context) {
     if (vehicle) {
       updateUserState(phone, 'quote', 'ask_name', {
         vehicle_id: vehicleId,
-        vehicle_info: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
+        vehicle_info: `${vehicle.brand} ${vehicle.model} ${vehicle.year} ${vehicle.version}`,
+        vehicle_price: vehicle.price,
+        vehicle_currency: vehicle.currency || 'ARS'
       });
       const quoteFlow = require('./quote');
       await quoteFlow.askName(phone, vehicle);

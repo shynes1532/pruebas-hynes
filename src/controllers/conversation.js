@@ -150,34 +150,41 @@ async function handleIncoming(phone, message, profileName) {
   // Router de flujos estructurados (botones, listas, pasos de flujo)
   const context = { phone, text, inputLower, state, profileName, updateUserState, logMessage, upsertLead };
 
-  switch (flow) {
-    case 'main_menu':
-      await menuFlow.handle(context);
-      break;
-    case 'catalog':
-      await catalogFlow.handle(context);
-      break;
-    case 'appointment':
-      await appointmentFlow.handle(context);
-      break;
-    case 'quote':
-      await quoteFlow.handle(context);
-      break;
-    case 'faq':
-      await faqFlow.handle(context);
-      break;
-    default:
-      // Ultimo recurso: intentar IA o mostrar menu
-      if (isText) {
-        const aiResponse = await tryClaudeResponse(phone, text);
-        if (aiResponse) {
-          logMessage(phone, 'outgoing', aiResponse, 'text', 'claude_ai');
-          await wa.sendText(phone, aiResponse);
-          return;
+  try {
+    switch (flow) {
+      case 'main_menu':
+        await menuFlow.handle(context);
+        break;
+      case 'catalog':
+        await catalogFlow.handle(context);
+        break;
+      case 'appointment':
+        await appointmentFlow.handle(context);
+        break;
+      case 'quote':
+        await quoteFlow.handle(context);
+        break;
+      case 'faq':
+        await faqFlow.handle(context);
+        break;
+      default:
+        // Ultimo recurso: intentar IA o mostrar menu
+        if (isText) {
+          const aiResponse = await tryClaudeResponse(phone, text);
+          if (aiResponse) {
+            logMessage(phone, 'outgoing', aiResponse, 'text', 'claude_ai');
+            await wa.sendText(phone, aiResponse);
+            return;
+          }
         }
-      }
-      await menuFlow.showMainMenu(phone, profileName);
-      break;
+        await menuFlow.showMainMenu(phone, profileName);
+        break;
+    }
+  } catch (err) {
+    console.error(`❌ Error en flujo ${flow}/${state.flow_step}:`, err);
+    // Resetear al menú principal para que el usuario no quede trabado
+    updateUserState(phone, 'main_menu', 'show', {});
+    await wa.sendText(phone, '⚠️ Ocurrió un error. Vamos a reiniciar.\n\nEscribí *menu* para volver al menú principal.');
   }
 }
 
