@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     return res.status(200).send(challenge);
   }
 
-  console.log('❌ Verificación de webhook fallida');
+  console.log('❌ Verificación de webhook fallida', { mode, token, expected: process.env.WEBHOOK_VERIFY_TOKEN, match: token === process.env.WEBHOOK_VERIFY_TOKEN });
   return res.sendStatus(403);
 });
 
