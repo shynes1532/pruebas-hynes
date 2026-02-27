@@ -25,14 +25,26 @@ router.post('/', async (req, res) => {
   try {
     const body = req.body;
 
-    if (!body.object || body.object !== 'whatsapp_business_account') return;
+    console.log('📩 Webhook POST recibido:', JSON.stringify(body).substring(0, 300));
+
+    if (!body.object || body.object !== 'whatsapp_business_account') {
+      console.log('⚠️ Objeto no es whatsapp_business_account:', body.object);
+      return;
+    }
 
     const entries = body.entry || [];
     for (const entry of entries) {
       const changes = entry.changes || [];
       for (const change of changes) {
         const value = change.value;
-        if (!value || !value.messages) continue;
+
+        // Ignorar notificaciones de status (enviado, leido, etc.)
+        if (value?.statuses) continue;
+
+        if (!value || !value.messages) {
+          console.log('ℹ️ Webhook sin mensajes (posible status update)');
+          continue;
+        }
 
         const messages = value.messages;
         const contacts = value.contacts || [];
@@ -42,12 +54,16 @@ router.post('/', async (req, res) => {
           const contact = contacts.find(c => c.wa_id === phone);
           const profileName = contact?.profile?.name || null;
 
+          console.log(`📱 Mensaje de ${phone} (${profileName}): tipo=${message.type}, texto="${message.text?.body || message.interactive?.button_reply?.title || '(no text)'}"`);
+
           await conversationController.handleIncoming(phone, message, profileName);
+
+          console.log(`✅ Mensaje procesado para ${phone}`);
         }
       }
     }
   } catch (err) {
-    console.error('Error procesando webhook:', err);
+    console.error('❌ Error procesando webhook:', err);
   }
 });
 

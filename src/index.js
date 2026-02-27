@@ -34,10 +34,14 @@ app.get('/', (req, res) => {
 
 // Initialize database and start server
 db.initialize().then(() => {
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚗 Bot del concesionario corriendo en puerto ${PORT}`);
     console.log(`📊 Panel admin: http://localhost:${PORT}/admin`);
     console.log(`🔗 Webhook URL: http://localhost:${PORT}/webhook`);
+    if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+      console.log(`🌐 URL pública: https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
+      console.log(`🔗 Webhook público: https://${process.env.RAILWAY_PUBLIC_DOMAIN}/webhook`);
+    }
   });
 }).catch(err => {
   console.error('Error al inicializar la base de datos:', err);

@@ -208,7 +208,35 @@ async function initialize() {
   `);
 
   saveToFile();
+
+  // Auto-seed: si no hay vehículos, cargar catálogo automáticamente
+  const count = new Statement(rawDb, 'SELECT COUNT(*) as total FROM vehicles').get();
+  if (!count || count.total === 0) {
+    console.log('📦 Tabla de vehículos vacía, ejecutando seed automático...');
+    await autoSeed();
+  }
+
   console.log('✅ Base de datos inicializada correctamente');
+}
+
+async function autoSeed() {
+  const seedPath = path.join(__dirname, '..', 'seed.js');
+  if (!fs.existsSync(seedPath)) {
+    console.log('⚠️ No se encontró seed.js, saltando auto-seed');
+    return;
+  }
+  // Ejecutar la lógica de seed directamente
+  const vehicles = require('../data/vehicles.json');
+  const insert = dbWrapper.prepare(
+    'INSERT INTO vehicles (brand, model, year, version, price, currency, category, fuel, transmission, engine, horsepower, color_options, features) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+  );
+  const insertMany = dbWrapper.transaction((items) => {
+    for (const v of items) {
+      insert.run(v.brand, v.model, v.year, v.version, v.price, v.currency, v.category, v.fuel, v.transmission, v.engine, v.horsepower, v.color_options, v.features);
+    }
+  });
+  insertMany(vehicles);
+  console.log(`📦 ${vehicles.length} vehículos cargados automáticamente`);
 }
 
 module.exports = { getDb, initialize };

@@ -16,14 +16,16 @@ function getUrl() {
 // Enviar mensaje de texto simple
 async function sendText(to, text) {
   try {
-    await axios.post(getUrl(), {
+    console.log(`📤 Enviando texto a ${to}: "${text.substring(0, 80)}..."`);
+    const resp = await axios.post(getUrl(), {
       messaging_product: 'whatsapp',
       to,
       type: 'text',
       text: { body: text }
     }, { headers: getHeaders() });
+    console.log(`✅ Texto enviado a ${to}, message_id: ${resp.data?.messages?.[0]?.id || 'N/A'}`);
   } catch (err) {
-    console.error('Error enviando texto:', err.response?.data || err.message);
+    console.error('❌ Error enviando texto:', JSON.stringify(err.response?.data || err.message));
   }
 }
 
@@ -44,14 +46,16 @@ async function sendButtons(to, bodyText, buttons, headerText) {
   }
 
   try {
-    await axios.post(getUrl(), {
+    console.log(`📤 Enviando botones a ${to}: "${bodyText.substring(0, 60)}..."`);
+    const resp = await axios.post(getUrl(), {
       messaging_product: 'whatsapp',
       to,
       type: 'interactive',
       interactive
     }, { headers: getHeaders() });
+    console.log(`✅ Botones enviados a ${to}`);
   } catch (err) {
-    console.error('Error enviando botones:', err.response?.data || err.message);
+    console.error('❌ Error enviando botones:', JSON.stringify(err.response?.data || err.message));
   }
 }
 
