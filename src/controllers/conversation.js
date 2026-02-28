@@ -79,6 +79,9 @@ function isFreeText(message) {
   return message.type === 'text';
 }
 
+// Contador de mensajes AI por usuario (para mostrar menú cada X mensajes)
+const aiMessageCount = new Map();
+
 // Handler principal
 async function handleIncoming(phone, message, profileName) {
   // Marcar como leido
@@ -137,16 +140,21 @@ async function handleIncoming(phone, message, profileName) {
     if (aiResponse) {
       logMessage(phone, 'outgoing', aiResponse, 'text', 'claude_ai');
       await wa.sendText(phone, aiResponse);
-      // Ofrecer menu despues de la respuesta de IA
-      await wa.sendButtons(
-        phone,
-        'Tambien podes usar nuestro menu interactivo:',
-        [
-          { id: 'menu_catalog', title: 'Ver Catalogo' },
-          { id: 'menu_quote', title: 'Cotizar' },
-          { id: 'menu_appointment', title: 'Agendar Cita' }
-        ]
-      );
+      
+      // Mostrar menú solo cada 4 mensajes de IA (no spamear)
+      const count = aiMessageCount.get(phone) || 0;
+      aiMessageCount.set(phone, count + 1);
+      
+      if (count % 4 === 3) {
+        await wa.sendButtons(
+          phone,
+          'También podés usar el menú:',
+          [
+            { id: 'menu_catalog', title: 'Ver Catálogo' },
+            { id: 'menu_appointment', title: 'Agendar Visita' }
+          ]
+        );
+      }
       return;
     }
 
