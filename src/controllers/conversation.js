@@ -6,6 +6,8 @@ const catalogFlow = require('../flows/catalog');
 const appointmentFlow = require('../flows/appointment');
 const quoteFlow = require('../flows/quote');
 const faqFlow = require('../flows/faq');
+const savingsFlow = require('../flows/savings');
+const creditFlow = require('../flows/credit');
 
 // Obtener o crear estado del usuario
 function getUserState(phone) {
@@ -182,6 +184,12 @@ async function handleIncoming(phone, message, profileName) {
         break;
       case 'faq':
         await faqFlow.handle(context);
+        break;
+      case 'savings':
+        await savingsFlow.handle(context);
+        break;
+      case 'credit':
+        await creditFlow.handle(context);
         break;
       default:
         // Ultimo recurso: intentar IA o mostrar menu

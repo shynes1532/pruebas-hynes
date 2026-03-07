@@ -199,12 +199,49 @@ async function initialize() {
       FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
     );
 
+    -- Solicitudes de Plan de Ahorro
+    CREATE TABLE IF NOT EXISTS savings_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      phone TEXT NOT NULL,
+      name TEXT,
+      contact_phone TEXT,
+      plan_id TEXT,
+      plan_name TEXT,
+      request_type TEXT DEFAULT 'suscripcion',
+      status TEXT DEFAULT 'pendiente',
+      notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Solicitudes de Crédito Automotor
+    CREATE TABLE IF NOT EXISTS credit_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      phone TEXT NOT NULL,
+      name TEXT,
+      dni TEXT,
+      email TEXT,
+      contact_phone TEXT,
+      employment_type TEXT,
+      monthly_income REAL,
+      seniority TEXT,
+      vehicle_model TEXT,
+      down_payment TEXT,
+      credit_term INTEGER,
+      status TEXT DEFAULT 'pendiente',
+      notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
     -- Índices
     CREATE INDEX IF NOT EXISTS idx_conversations_phone ON conversations(phone);
     CREATE INDEX IF NOT EXISTS idx_conversations_created ON conversations(created_at);
     CREATE INDEX IF NOT EXISTS idx_leads_phone ON leads(phone);
     CREATE INDEX IF NOT EXISTS idx_appointments_date ON appointments(date);
     CREATE INDEX IF NOT EXISTS idx_appointments_status ON appointments(status);
+    CREATE INDEX IF NOT EXISTS idx_savings_requests_phone ON savings_requests(phone);
+    CREATE INDEX IF NOT EXISTS idx_savings_requests_status ON savings_requests(status);
+    CREATE INDEX IF NOT EXISTS idx_credit_requests_phone ON credit_requests(phone);
+    CREATE INDEX IF NOT EXISTS idx_credit_requests_status ON credit_requests(status);
   `);
 
   saveToFile();
