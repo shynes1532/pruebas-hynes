@@ -1,0 +1,367 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Bon Dia Desayunos: desayunos sorpresa, picadas y pastelería artesanal con envío a domicilio en Río Grande, Tierra del Fuego."><style>body{margin:0}img{max-width:100%}</style></head><body><title>Bon Dia Desayunos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500;9..144,700;9..144,900&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: una sola página con scroll suave (Lenis), reveals por sección y marquee de productos */
+:root{
+  --bg:#FFF7EA; --bg2:#FFE8A3; --bg3:#FBE6C8; --card:#FFFFFF;
+  --fg:#3A281B; --fg2:#5A4330; --fg3:#7A5F49;
+  --accent:#E2552F; --accent-ink:#FFFFFF; --wa:#1F9D55;
+  --dark:#3A281B; --dark-fg:#FFF7EA; --dark-fg2:#E8D6C2;
+  --display:'Fraunces',Georgia,serif; --body:'Nunito',system-ui,sans-serif;
+  --shadow:0 8px 30px rgba(74,45,20,.08);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1C140F; --bg2:#2A1D12; --bg3:#241A12; --card:#2B2019;
+  --fg:#FFF2DF; --fg2:#E2CDB6; --fg3:#B89C84; --accent:#F0693F; --dark:#120C08;
+  --shadow:0 8px 30px rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1C140F; --bg2:#2A1D12; --bg3:#241A12; --card:#2B2019;
+  --fg:#FFF2DF; --fg2:#E2CDB6; --fg3:#B89C84; --accent:#F0693F; --dark:#120C08;
+  --shadow:0 8px 30px rgba(0,0,0,.35); color-scheme:dark}
+
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55;overflow-x:hidden}
+*{box-sizing:border-box}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+p{margin:0}
+a{color:var(--accent);text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;font-weight:800;font-size:17px;border:0;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(74,45,20,.18)}
+.btn:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn-accent{background:var(--accent);color:var(--accent-ink)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-light{background:var(--card);color:var(--fg)}
+.btn-dark{background:var(--dark);color:var(--dark-fg)}
+.chip{display:inline-block;background:var(--bg2);color:var(--fg);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:800;letter-spacing:.02em}
+.card{background:var(--card);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow);min-width:0}
+.ph{display:flex;align-items:center;justify-content:center;background:var(--bg3);color:var(--fg3);font-weight:700;font-size:13px;text-align:center;border-radius:18px;padding:12px;max-width:100%}
+.h2{font-size:clamp(30px,4.5vw,42px);font-weight:800;letter-spacing:-.5px;line-height:1.1}
+.sec{padding-block:72px}
+.sec-head{display:flex;flex-direction:column;gap:10px;max-width:640px;margin-bottom:36px}
+.sec-head .chip,.rv>div>.chip{align-self:flex-start}
+.grid{display:grid;gap:20px}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.muted{color:var(--fg2)}
+
+/* Header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:box-shadow .3s}
+header.scrolled{box-shadow:0 4px 20px rgba(74,45,20,.08)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--fg);font-family:var(--display);font-weight:900;font-size:24px}
+.brand-mark{width:40px;height:40px;border-radius:50%;background:var(--accent);display:inline-flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--fg);font-weight:700;font-size:15px}
+.nav-links a:hover{color:var(--accent)}
+
+/* Hero */
+.hero{background:var(--bg2);overflow:hidden;position:relative}
+.hero-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px;align-items:center;padding-block:72px 80px}
+.hero h1{font-size:clamp(40px,6vw,64px);line-height:1.02;font-weight:900;letter-spacing:-1px}
+.hero-pics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;will-change:transform}
+.blob{position:absolute;border-radius:50%;background:var(--accent);opacity:.12;pointer-events:none;will-change:transform}
+.check{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+
+/* Marquee */
+.marquee{overflow:hidden;background:var(--dark);color:var(--dark-fg);padding-block:16px;font-family:var(--display);font-weight:700;font-size:20px}
+.marquee-track{display:flex;gap:48px;width:max-content;animation:marquee 28s linear infinite;white-space:nowrap}
+.marquee-track span{display:inline-flex;align-items:center;gap:48px}
+.marquee-track i{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* Steps */
+.num{font-family:var(--display);font-size:44px;font-weight:900;color:var(--accent);line-height:1}
+
+/* Reveal */
+.js .rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.js .rv.in{opacity:1;transform:none}
+.js .rv-grid>*{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.js .rv-grid.in>*{opacity:1;transform:none}
+.js .rv-grid.in>*:nth-child(2){transition-delay:.1s}
+.js .rv-grid.in>*:nth-child(3){transition-delay:.2s}
+.js .rv-grid.in>*:nth-child(4){transition-delay:.3s}
+.js .rv-grid.in>*:nth-child(5){transition-delay:.4s}
+.js .rv-grid.in>*:nth-child(6){transition-delay:.5s}
+
+/* Price row */
+.price{font-family:var(--display);font-size:26px;font-weight:900;font-variant-numeric:tabular-nums}
+.row-sb{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.card .row-sb.bottom{margin-top:auto;padding-top:6px}
+.btn-sm{min-height:44px;padding:0 18px;font-size:15px}
+.card-dark{background:var(--dark);color:var(--dark-fg)}
+.card-dark p{color:var(--dark-fg2)}
+
+/* CTA band */
+.cta{background:var(--accent);color:#fff;text-align:center}
+.cta .wrap{display:flex;flex-direction:column;align-items:center;gap:20px;padding-block:72px}
+.cta h2{color:#fff;font-size:clamp(32px,5vw,46px);font-weight:900;max-width:700px}
+.cta p{color:#FFE8DE;max-width:540px;font-size:18px}
+.phone{font-family:var(--display);font-weight:900;font-size:22px;letter-spacing:.5px;user-select:all}
+
+footer{background:var(--dark);color:var(--dark-fg2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center;padding-block:40px}
+.foot a{color:var(--dark-fg);display:inline-flex;align-items:center;gap:8px;font-weight:700}
+ul.list{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-weight:700}
+ul.list li{display:flex;gap:8px;align-items:center}
+ul.list li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--dark);color:var(--dark-fg);padding:10px 18px;border-radius:999px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:30}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:760px){
+  .nav-links{display:none}
+  .hero-grid,.g3,.g2{grid-template-columns:1fr}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero-grid{padding-block:48px 56px}
+  .sec{padding-block:56px}
+  .hero .btn{min-height:48px;font-size:16px;padding:0 20px}
+}
+@media (prefers-reduced-motion: reduce){
+  .js .rv,.js .rv-grid>*{opacity:1;transform:none;transition:none}
+  .marquee-track{animation:none}
+  .hero-pics,.blob{transform:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+
+<header id="top">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="Bon Dia, inicio">
+      <span class="brand-mark"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFF7EA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h12a4 4 0 0 1 0 8H4z"/><path d="M16 15h2a2 2 0 0 1 0 4h-2"/><path d="M8 3c0 2-2 2-2 4M12 3c0 2-2 2-2 4"/></svg></span>
+      Bon Dia
+    </a>
+    <nav class="nav-links" aria-label="Secciones">
+      <a href="#boxes">Boxes</a>
+      <a href="#fechas">Fechas especiales</a>
+      <a href="#pasteleria">Pastelería</a>
+      <a href="#como">Cómo pedir</a>
+      <a href="#envios">Envíos</a>
+    </nav>
+    <a class="btn btn-wa" href="https://wa.me/5492964698453" target="_blank" rel="noopener">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>
+      Pedir por WhatsApp
+    </a>
+  </div>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="blob" data-speed="0.25" style="width:420px;height:420px;right:-120px;top:-140px"></div>
+  <div class="blob" data-speed="0.12" style="width:260px;height:260px;left:-90px;bottom:-110px;background:var(--wa)"></div>
+  <div class="wrap hero-grid">
+    <div style="display:flex;flex-direction:column;gap:22px" class="rv in">
+      <span class="chip" style="background:var(--card);align-self:flex-start">Río Grande · Tierra del Fuego · Envíos a domicilio</span>
+      <h1>Un desayuno sorpresa que acorta distancias.</h1>
+      <p class="muted" style="font-size:19px;max-width:520px">Boxes de desayuno, picadas y tortas artesanales, armadas a mano y entregadas en la puerta. Para sorprender a quien querés, aunque estés lejos.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <a class="btn btn-accent" href="https://wa.me/5492964698453?text=Hola!%20Quiero%20reservar%20un%20box" target="_blank" rel="noopener">Reservar mi box</a>
+        <a class="btn btn-light" href="#boxes">Ver boxes</a>
+      </div>
+      <div style="display:flex;gap:28px;flex-wrap:wrap;padding-top:6px">
+        <div class="check"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--wa)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Hecho el mismo día</div>
+        <div class="check"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--wa)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Todos los medios de pago</div>
+      </div>
+    </div>
+    <div class="hero-pics" data-speed="-0.08">
+      <div class="ph" style="height:300px;grid-column:span 2;border-radius:28px;padding:0;overflow:hidden"><img src="img/hero.webp" alt="Box de desayuno sorpresa abierta sobre la mesa" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"></div>
+      <div class="ph" style="height:160px;padding:0;overflow:hidden"><img src="img/torta.webp" alt="Torta artesanal choco cookie" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"></div>
+      <div class="ph" style="height:160px;padding:0;overflow:hidden"><img src="img/entrega.webp" alt="Entrega de un box en la puerta de casa" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Desayunos sorpresa <i></i> Picadas <i></i> Tortas artesanales <i></i> Alfajores <i></i> Cheesecake <i></i> Box kids <i></i> Envíos a toda la ciudad <i></i></span>
+    <span>Desayunos sorpresa <i></i> Picadas <i></i> Tortas artesanales <i></i> Alfajores <i></i> Cheesecake <i></i> Box kids <i></i> Envíos a toda la ciudad <i></i></span>
+  </div>
+</div>
+
+<section id="como" class="sec">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="chip">Así de simple</span>
+      <h2 class="h2">Pedís hoy, sorprendés mañana.</h2>
+    </div>
+    <div class="grid g3 rv-grid">
+      <div class="card"><span class="num">1</span><h3 style="font-size:22px;font-weight:700">Elegís el box</h3><p class="muted">Desayuno, picada, kids o una torta. Si querés algo a medida, lo armamos juntos por WhatsApp.</p></div>
+      <div class="card"><span class="num">2</span><h3 style="font-size:22px;font-weight:700">Nos decís para quién y cuándo</h3><p class="muted">Nombre, dirección en Río Grande y el día. Podés sumar una dedicatoria o un globo de feliz día.</p></div>
+      <div class="card"><span class="num">3</span><h3 style="font-size:22px;font-weight:700">Lo llevamos a domicilio</h3><p class="muted">Preparado fresco esa mañana y entregado en la puerta. Vos solo esperás el mensaje de agradecimiento.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="boxes" class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="rv" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:36px">
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:640px">
+        <span class="chip">Nuestros boxes</span>
+        <h2 class="h2">Para cada mañana que merece un festejo.</h2>
+      </div>
+      <p style="color:var(--fg3);font-size:14px;max-width:320px">Precios de referencia. Pueden variar según el contenido y la fecha del pedido.</p>
+    </div>
+    <div class="grid g3 rv-grid">
+      <article class="card">
+        <div class="ph" style="height:190px;padding:0;overflow:hidden"><img src="img/box-sonrisa.webp" alt="Box Sonrisa XL para chicos" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"></div>
+        <div class="row-sb"><h3 style="font-size:24px;font-weight:700">Box Sonrisa XL</h3><span class="chip" style="background:var(--bg3)">Kids</span></div>
+        <p class="muted">Jugo, chocolatada, huevito sorpresa, cookie, dona, medialunas, 2 alfajores, gomitas y sándwich de jamón y queso.</p>
+        <div class="row-sb bottom"><span class="price">$36.900</span><a class="btn btn-accent btn-sm" href="https://wa.me/5492964698453?text=Hola!%20Quiero%20reservar%20un%20Box%20Sonrisa%20XL" target="_blank" rel="noopener">Reservar</a></div>
+      </article>
+      <article class="card">
+        <div class="ph" style="height:190px;padding:0;overflow:hidden"><img src="img/box-mini.webp" alt="Box Mini para chicos" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"></div>
+        <div class="row-sb"><h3 style="font-size:24px;font-weight:700">Box Mini</h3><span class="chip" style="background:var(--bg3)">Kids</span></div>
+        <p class="muted">Mini torta, 2 alfajores, cupcake, chip de jamón y queso, chocolatada y huevito sorpresa.</p>
+        <div class="row-sb bottom"><span class="price">$19.900</span><a class="btn btn-accent btn-sm" href="https://wa.me/5492964698453?text=Hola!%20Quiero%20reservar%20un%20Box%20Mini" target="_blank" rel="noopener">Reservar</a></div>
+      </article>
+      <article class="card">
+        <div class="ph" style="height:190px;padding:0;overflow:hidden"><img src="img/box-picada.webp" alt="Box Picada con cerveza" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"></div>
+        <div class="row-sb"><h3 style="font-size:24px;font-weight:700">Box Picada</h3><span class="chip" style="background:var(--bg3)">Salado</span></div>
+        <p class="muted">Picada completa, aceitunas, panes saborizados, pan de campo, mayo saborizada, maní y cerveza, jugo o gaseosa.</p>
+        <div class="row-sb bottom"><span class="price">$49.800</span><a class="btn btn-accent btn-sm" href="https://wa.me/5492964698453?text=Hola!%20Quiero%20reservar%20un%20Box%20Picada" target="_blank" rel="noopener">Reservar</a></div>
+      </article>
+      <article class="card">
+        <div class="ph" style="height:190px;padding:0;overflow:hidden"><img src="img/box-saludable.webp" alt="Box Saludable con frutas y cheesecake" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"></div>
+        <div class="row-sb"><h3 style="font-size:24px;font-weight:700">Box Saludable</h3><span class="chip" style="background:var(--bg3)">Desayuno</span></div>
+        <p class="muted">Cheesecake de frutos rojos, pepas de avena, muffins de remolacha, mini budín de zanahoria, fruta fresca, yogurt, tostadas, jugo e infusiones.</p>
+        <div class="row-sb bottom"><span class="price">$55.000</span><a class="btn btn-accent btn-sm" href="https://wa.me/5492964698453?text=Hola!%20Quiero%20reservar%20un%20Box%20Saludable" target="_blank" rel="noopener">Reservar</a></div>
+      </article>
+      <article class="card">
+        <div class="ph" style="height:190px;padding:0;overflow:hidden"><img src="img/box-mixto.webp" alt="Box Mixto dulce y salado" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"></div>
+        <div class="row-sb"><h3 style="font-size:24px;font-weight:700">Box Mixto</h3><span class="chip" style="background:var(--bg3)">Dulce + salado</span></div>
+        <p class="muted">Mini picadita, shot Oreo, ciabatta de salame y queso, muffin, fosforitos, alfajores bañados y de maicena, jugo, infusiones y pepas.</p>
+        <div class="row-sb bottom"><span class="price">$55.500</span><a class="btn btn-accent btn-sm" href="https://wa.me/5492964698453?text=Hola!%20Quiero%20reservar%20un%20Box%20Mixto" target="_blank" rel="noopener">Reservar</a></div>
+      </article>
+      <article class="card card-dark">
+        <span class="chip" style="background:var(--accent);color:#fff;align-self:flex-start">A medida</span>
+        <h3 style="font-size:24px;font-weight:700">¿Querés armar el tuyo?</h3>
+        <p>Elegí lo que más le gusta a esa persona y lo armamos juntos: dulce, salado, con cerveza, con café, con taza de regalo.</p>
+        <a class="btn btn-light" style="margin-top:auto;align-self:flex-start" href="https://wa.me/5492964698453?text=Hola!%20Quiero%20armar%20un%20box%20a%20medida" target="_blank" rel="noopener">Armar mi box</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="fechas" class="sec" style="background:var(--bg3)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="chip" style="background:var(--card)">Fechas especiales</span>
+      <h2 class="h2">Cada fecha tiene su box.</h2>
+      <p class="muted">Lanzamos ediciones limitadas para cada festejo. Reservá con anticipación: los cupos vuelan.</p>
+    </div>
+    <div class="grid g4 rv-grid">
+      <div class="card" style="gap:10px"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="4"/></svg><h3 style="font-size:20px;font-weight:700">Día del Niño</h3><p class="muted" style="font-size:15px">Boxes con juguitos, golosinas y caja para colorear con crayones.</p></div>
+      <div class="card" style="gap:10px"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12v10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/><path d="M18 10h1a2 2 0 0 1 0 4h-1"/><path d="M9 3v3M12 3v3M15 3v3"/></svg><h3 style="font-size:20px;font-weight:700">Día del Padre</h3><p class="muted" style="font-size:15px">Picadas con cerveza, pan de campo y globo metalizado de feliz día.</p></div>
+      <div class="card" style="gap:10px"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"/></svg><h3 style="font-size:20px;font-weight:700">Día de la Madre</h3><p class="muted" style="font-size:15px">Cheesecake, croissant, bombones y taza de regalo con infusiones.</p></div>
+      <div class="card" style="gap:10px"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-4 0-7 4-7 9s3 9 7 9 7-4 7-9-3-9-7-9z"/><path d="M5.5 10c3-1 10-1 13 0M6 15c3 1 9 1 12 0"/></svg><h3 style="font-size:20px;font-weight:700">Pascuas</h3><p class="muted" style="font-size:15px">Medios huevos rellenos y figuras de chocolate con leche con golosinas.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pasteleria" class="sec">
+  <div class="wrap grid g2" style="gap:48px;align-items:center">
+    <div class="ph rv" style="height:420px;border-radius:28px;padding:0;overflow:hidden"><img src="img/pasteleria.webp" alt="Vitrina de pastelería artesanal" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit"></div>
+    <div class="rv" style="display:flex;flex-direction:column;gap:18px">
+      <span class="chip" style="align-self:flex-start">Pastelería artesanal</span>
+      <h2 class="h2">Tortas, alfajores y cosas ricas hechas a mano.</h2>
+      <p class="muted">Todo lo que va dentro de los boxes también sale solo: tortas para cumpleaños, cajitas degustación de alfajores, cheesecakes, brownies y scons. Encargá con anticipación y lo llevamos.</p>
+      <ul class="list">
+        <li>Torta choco cookie</li><li>Cheesecake de ddl</li><li>Caja x7 alfajores</li><li>Red velvet</li><li>Tiramisú</li><li>Lemon pie</li>
+      </ul>
+      <a class="btn btn-dark" style="align-self:flex-start" href="https://wa.me/5492964698453?text=Hola!%20Quiero%20encargar%20pasteler%C3%ADa" target="_blank" rel="noopener">Encargar pastelería</a>
+    </div>
+  </div>
+</section>
+
+<section id="envios" class="sec" style="padding-top:0">
+  <div class="wrap grid g3 rv-grid">
+    <div class="card" style="gap:10px"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><h3 style="font-size:20px;font-weight:700">Envíos a toda la ciudad</h3><p class="muted">Entregamos en todo Río Grande. Comprando 2 o más boxes a la misma dirección, el envío es gratis.</p></div>
+    <div class="card" style="gap:10px"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg><h3 style="font-size:20px;font-weight:700">Todos los medios de pago</h3><p class="muted">Transferencia, Mercado Pago, tarjetas de débito y crédito, o efectivo contra entrega.</p></div>
+    <div class="card" style="gap:10px"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h3 style="font-size:20px;font-weight:700">Pedí con anticipación</h3><p class="muted">Para fechas especiales los cupos son limitados. Reservá con [X] días de anticipación para asegurar tu box.</p></div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap rv">
+    <h2>¿A quién le vas a alegrar la mañana?</h2>
+    <p>Escribinos y lo coordinamos en minutos. Su consulta no molesta.</p>
+    <a class="btn btn-light" style="font-size:18px;min-height:56px;padding:0 30px" href="https://wa.me/5492964698453" target="_blank" rel="noopener">
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--wa)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>
+      Abrir WhatsApp
+    </a>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center">
+      <span class="phone" id="phoneText">2964 698453</span>
+      <button class="btn btn-sm" id="copyPhone" type="button" style="background:rgba(255,255,255,.18);color:#fff">Copiar número</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-family:var(--display);font-weight:900;font-size:22px;color:var(--dark-fg)">Bon Dia Desayunos</span>
+      <span style="font-size:14px">Desayunos sorpresa · Pastelería artesanal · Río Grande, Tierra del Fuego</span>
+    </div>
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+      <a href="https://www.instagram.com/bondiadesayunos_/" target="_blank" rel="noopener"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>@bondiadesayunos_</a>
+      <a href="https://wa.me/5492964698453" target="_blank" rel="noopener"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>2964 698453</a>
+    </div>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status">Número copiado</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.classList.add('js');
+
+  // Reveal on scroll
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{rootMargin:'0px 0px -10% 0px',threshold:0.12});
+  document.querySelectorAll('.rv,.rv-grid').forEach(function(el){ io.observe(el); });
+
+  // Smooth scroll (Lenis) + anchors
+  var lenis = null;
+  if(!reduce && window.Lenis){
+    try{
+      lenis = new Lenis({lerp:0.1, smoothWheel:true});
+      function raf(t){ lenis.raf(t); requestAnimationFrame(raf); }
+      requestAnimationFrame(raf);
+    }catch(err){ lenis = null; }
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(ev){
+      var id = a.getAttribute('href').slice(1); var t = id ? document.getElementById(id) : null;
+      if(!t) return; ev.preventDefault();
+      if(lenis){ lenis.scrollTo(t,{offset:-70}); } else { t.scrollIntoView({behavior:'smooth',block:'start'}); }
+    });
+  });
+
+  // Header shadow + hero parallax
+  var header = document.querySelector('header');
+  var px = document.querySelectorAll('[data-speed]');
+  function onScroll(){
+    var y = window.scrollY || 0;
+    header.classList.toggle('scrolled', y > 8);
+    if(reduce) return;
+    px.forEach(function(el){ el.style.transform = 'translate3d(0,' + (y * parseFloat(el.dataset.speed)) + 'px,0)'; });
+  }
+  if(lenis){ lenis.on('scroll', onScroll); } else { window.addEventListener('scroll', onScroll, {passive:true}); }
+  onScroll();
+
+  // Copy phone
+  var btn = document.getElementById('copyPhone'), toast = document.getElementById('toast'), ph = document.getElementById('phoneText');
+  btn.addEventListener('click',function(){
+    var n = '2964698453';
+    function done(){ toast.classList.add('show'); setTimeout(function(){ toast.classList.remove('show'); },1800); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(n).then(done).catch(function(){ selectText(); });
+    } else { selectText(); }
+    function selectText(){ var r = document.createRange(); r.selectNodeContents(ph); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+  });
+})();
+</script>
+</body></html>
